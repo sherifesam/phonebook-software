@@ -32,50 +32,64 @@
  * Return:      void
  *
  *****************************************************************************/
-void readTxtFile()
+void readTxtFile(void)
 {
     //reading the whole file
     ptr_read =fopen(TEXT_FILE_NAME, READ);
     // 2D-array to save the lines of the text file
-    char line[MAX_NUMBER_OF_LINES][MAX_SIZE_OF_LINE];
+    u8 line[MAX_NUMBER_OF_LINES][MAX_SIZE_OF_LINE]= {};
 
     // A for loop to read the whole text file and save it in the array
-    int i=0;
-    TOTAL_LINES = 0;
-    while(fgets(line[i], MAX_NUMBER_OF_LINES, ptr_read)) 
+    u16 file_ctr = (u16)0;
+    u16 size_of_line = (u16)0;
+    TOTAL_LINES = (u16)0;
+
+
+    while(fgets(line[file_ctr], ((s32)MAX_NUMBER_OF_LINES), ptr_read))
     {
-        line[i][strlen(line[i]) - 1] = '\0';
-        i++;
+        size_of_line = (u16)strlen(line[file_ctr]) - (u16)1;
+        line[file_ctr][size_of_line] = (u8)'\0';
+        file_ctr++;
     }
-    TOTAL_LINES = i;
+    TOTAL_LINES = file_ctr;
 
     /* inserting the initial database into the array of structures */
 
     //A pointer that would point to the delimeter so that we could split the string and extract the desired data
-    char* delimeter;  
-    int lines_ctr=1;
-    int employees_ctr=0;
-    for(lines_ctr=1; lines_ctr< (TOTAL_LINES+1); lines_ctr++)
+    u8* delimeter;
+    u16 lines_ctr = 1;
+    u16 employees_ctr = 0;
+    u16 array_ctr = 0;
+
+    for(lines_ctr = (u16)1; lines_ctr < (TOTAL_LINES + (u16)1); lines_ctr++)
     {
+
+        //the (-1) is because the line_ctr starts from 1 but the array indicies starts from 0
+        array_ctr = lines_ctr - (u16)1;
+
         //finding index of the delimeter (:)
-        delimeter = strchr(line[lines_ctr - 1],':'); //-----------------> the (-1) is because the line_ctr starts from 1 but the array indicies starts from 0
-        int index = (int)(delimeter - line[lines_ctr - 1]);
+        delimeter = strchr(line[array_ctr],((s32)':'));
+        u8 index = ((u32)delimeter) - ((u32)(line[array_ctr]));
         //extracting data from line
-        char * subarr= &line[lines_ctr - 1][index + WHITE_SPACE_COMPENSATION];
+        u8 * subarr = &line[array_ctr][index + WHITE_SPACE_COMPENSATION];
         //Assigning info to the array of structures
-        if(lines_ctr % 3 == NAME_FIELD_INDICATION) //---------------------->  if the ctr % 3 = 1 , that means that this line contains the name field data
+        if((lines_ctr % (u16)3) == NAME_FIELD_INDICATION) //---------------------->  if the ctr % 3 = 1 , that means that this line contains the name field data
         {
             strcpy(RECORDS[employees_ctr].name , subarr);
         }
-        else if(lines_ctr % 3 == EMAIL_FIELD_INDICATION)//---------------------->  if the ctr % 3 = 2 , that means that this line contains the email field data
+        else if((lines_ctr % (u16)3) == EMAIL_FIELD_INDICATION)//---------------------->  if the ctr % 3 = 2 , that means that this line contains the email field data
         {
             strcpy(RECORDS[employees_ctr].email , subarr);
         }
-        else if(lines_ctr % 3 == PHONE_FIELD_INDICATION)//---------------------->  if the ctr % 3 = 0 , that means that this line contains the phone number field data
+        else if((lines_ctr % (u16)3) == PHONE_FIELD_INDICATION)//---------------------->  if the ctr % 3 = 0 , that means that this line contains the phone number field data
         {
             strcpy(RECORDS[employees_ctr].phone , subarr);
             //every 3 lines means new employee
             employees_ctr++;
+        }
+        else
+        {
+            printf("error in reading file");
         }
     }
     fclose(ptr_read);
@@ -87,12 +101,12 @@ void readTxtFile()
  * Description: it recieves an index of the employee to be deleted, then
  *              it deletes it from the array of structure
  *
- * Arguments:   int index
+ * Arguments:   s16 index
  * Return:      void
  *
  *****************************************************************************/
 
-void deleteEmployee(int index)
+void deleteEmployee(s16 index)
 {
     if(index == NOT_FOUND)
     {
@@ -101,14 +115,14 @@ void deleteEmployee(int index)
     else
     {
         //For loop to delete the desired employee and rearrange the array of struct
-        int j;
-        for(j = index; j < TOTAL_EMPLOYEES ; j++)
+        u16 array_ctr;
+        for(array_ctr = (u16)index; array_ctr < TOTAL_EMPLOYEES ; array_ctr++)
             {
-              RECORDS[j] = RECORDS[j + 1];
+              RECORDS[array_ctr] = RECORDS[array_ctr + (u16)1];
             } 
         printf("That employee has been deleted from the database \n");
         //Update the global variable TOTAL_LINES so that it would update the TOTAL_EMPLOYEES macro
-        TOTAL_LINES = TOTAL_LINES - 3;
+        TOTAL_LINES = TOTAL_LINES - (u16)3;
 
     }
    
@@ -123,33 +137,33 @@ void deleteEmployee(int index)
  *              array of structures
  *
  * Arguments:   None
- * Return:      int
+ * Return:      s16
  *
  *****************************************************************************/
 
-int searchForEmployee()
+s16 searchForEmployee(void)
 {
-    char * theName;
-    int cnt=0;
-    int t=0;
+    u8 theName[10] = {};
+    s16 existence_ctr = 0;
+    u16 array_ctr = 0;
     printf("Please enter the name of the employee \n");
     scanf("%s",theName);
     //For loop to compare between the given name from the user and all the names in the database , it increments the ctr until it finds it
-    for(t=0; t< TOTAL_EMPLOYEES; t++)
+    for(array_ctr = (u16)0; array_ctr < TOTAL_EMPLOYEES; array_ctr++)
     {
-        if(strcmp(RECORDS[cnt].name , theName) != 0)
+        if(strcmp(RECORDS[existence_ctr].name , theName) != 0)
             {
-                cnt++;   
+            existence_ctr++;
             }
 
     }
     // If the ctr is equal to the current number of employees, this means that the for loop couldn't find the employee which means he/she doesn't exist
-    if(cnt == TOTAL_EMPLOYEES)
+    if(existence_ctr == (s16)TOTAL_EMPLOYEES)
     {
-        cnt= NOT_FOUND;
+        existence_ctr = NOT_FOUND;
     }
     
-    return cnt;
+    return existence_ctr;
 }
 
 /******************************************************************************
@@ -164,15 +178,15 @@ int searchForEmployee()
  *
  *****************************************************************************/
 
-void insertEmployee()
+void insertEmployee(void)
 {
     printf("Please enter the employee's Name, Email, Phone in order : \n");
     scanf("%s%s%s", RECORDS[TOTAL_EMPLOYEES].name, RECORDS[TOTAL_EMPLOYEES].email, RECORDS[TOTAL_EMPLOYEES].phone);
 
     //Update the global variable TOTAL_LINES so that it would update the TOTAL_EMPLOYEES macro
-    TOTAL_LINES = TOTAL_LINES + 3;
+    TOTAL_LINES = TOTAL_LINES + (u16)3;
     printf("This Employee has been added to the database \n");
-    printf("The total number of employees is now %d \n", TOTAL_EMPLOYEES);
+    printf("The total number of employees is now %hu \n", TOTAL_EMPLOYEES);
 }
 
 /******************************************************************************
@@ -182,12 +196,12 @@ void insertEmployee()
  * Description: it takes an index of the employee to be modified and rewrite his
  *              name and phone number
  *
- * Arguments:   int index
+ * Arguments:   s16 index
  * Return:      void
  *
  *****************************************************************************/
 
-void modifyEmployee(int index)
+void modifyEmployee(s16 index)
 {
     if(index == NOT_FOUND)
     {
@@ -213,15 +227,15 @@ void modifyEmployee(int index)
  *
  *****************************************************************************/
 
-void updateTxtFile()
+void updateTxtFile(void)
 {
-    int i=0;
+    u16 array_ctr=(u16)0;
     ptr_write =fopen(TEXT_FILE_NAME, WRITE);
-        for (i=0; i< TOTAL_EMPLOYEES; i++)
+        for (array_ctr = (u16)0; array_ctr < TOTAL_EMPLOYEES; array_ctr++)
         {
-            fprintf(ptr_write,"Employee Name: %s\n", RECORDS[i].name);
-            fprintf(ptr_write,"Employee Email: %s\n", RECORDS[i].email);
-            fprintf(ptr_write,"Employee Phone Number: %s\n", RECORDS[i].phone);
+            fprintf(ptr_write,"Employee Name: %s\n", RECORDS[array_ctr].name);
+            fprintf(ptr_write,"Employee Email: %s\n", RECORDS[array_ctr].email);
+            fprintf(ptr_write,"Employee Phone Number: %s\n", RECORDS[array_ctr].phone);
 
         }
         fclose(ptr_write);
@@ -234,12 +248,12 @@ void updateTxtFile()
  * Description: it searches for an employee with his name in the array of 
  *              structures and make sure if it exists or not
  *
- * Arguments:   int index
+ * Arguments:   s16 index
  * Return:      void
  *
  *****************************************************************************/
 
-void doesExist(int index)
+void doesExist(s16 index)
 {
     if(index == NOT_FOUND)
     {

@@ -13,10 +13,11 @@
 #include<stdio.h>
 #include <string.h>
 #include "inc/filesHandling.h"
+#include "inc/types.h"
 
 
 //Global Variables
-volatile int TOTAL_LINES;
+volatile u16 TOTAL_LINES;
 FILE *ptr_write;
 FILE *ptr_read;
 
@@ -25,11 +26,11 @@ FILE *ptr_read;
 employee RECORDS[MAX_NUM_OF_EMPLOYEES];
 
 
-	int main()
+	u16 main(void)
 	{
-		int choice=0;
-        char restart='y';
-        int index=0;
+		u16 choice = 0;
+        u8 restart = 'y';
+        s16 index = 0;
    
         readTxtFile();
         printf("\t\t\n\n----------------------------WELCOME----------------------------\t\t\n\n");
@@ -41,36 +42,37 @@ employee RECORDS[MAX_NUM_OF_EMPLOYEES];
             printf("2. Delete an employee\n");
             printf("3. Search for an employee\n");
             printf("4. Modify an employee\n");
-            scanf("%d", &choice);
+            scanf("%hu", &choice);
 
             switch(choice) {
-            case 1:
+            case (u16)1:
                 insertEmployee();
                 updateTxtFile();
                 break;
-            case 2:
+            case (u16)2:
                 index= searchForEmployee();
-                deleteEmployee(index);
+                deleteEmployee((s16)index);
                 updateTxtFile();
                 break;
-            case 3:
+            case (u16)3:
                 index= searchForEmployee();
-                doesExist(index);
+                doesExist((s16)index);
                 break;
-            case 4:
+            case (u16)4:
                 index= searchForEmployee();
-                modifyEmployee(index);
+                modifyEmployee((s16)index);
                 updateTxtFile();
                 break;
             default:
                 printf("Wrong entry, please enter a number between 1 and 4\n");
+                break;
             }
             printf("Do you want to do anything else? (y/n) \n");
             scanf(" %c", &restart);        
 
-            }    while(restart=='y');    
+            }    while(restart==(u8)'y');
             
-		return  0;
+		return (u16)0;
 	}
 
 
