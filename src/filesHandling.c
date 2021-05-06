@@ -35,7 +35,7 @@
 void readTxtFile(void)
 {
     //reading the whole file
-    ptr_read =fopen(TEXT_FILE_NAME, READ);
+    PTR_READ =fopen(TEXT_FILE_NAME, READ);
     // 2D-array to save the lines of the text file
     u8 line[MAX_NUMBER_OF_LINES][MAX_SIZE_OF_LINE]= {};
 
@@ -45,7 +45,7 @@ void readTxtFile(void)
     TOTAL_LINES = (u16)0;
 
 
-    while(fgets(line[file_ctr], ((s32)MAX_NUMBER_OF_LINES), ptr_read))
+    while(fgets(line[file_ctr], ((s32)MAX_NUMBER_OF_LINES), PTR_READ))
     {
         size_of_line = (u16)strlen(line[file_ctr]) - (u16)1;
         line[file_ctr][size_of_line] = (u8)'\0';
@@ -92,7 +92,7 @@ void readTxtFile(void)
             printf("error in reading file");
         }
     }
-    fclose(ptr_read);
+    fclose(PTR_READ);
 }
 /******************************************************************************
  *
@@ -143,15 +143,15 @@ void deleteEmployee(s16 index)
 
 s16 searchForEmployee(void)
 {
-    u8 theName[10] = {};
+    u8 the_name[10] = {};
     s16 existence_ctr = 0;
     u16 array_ctr = 0;
     printf("Please enter the name of the employee \n");
-    scanf("%s",theName);
+    scanf("%s",the_name);
     //For loop to compare between the given name from the user and all the names in the database , it increments the ctr until it finds it
     for(array_ctr = (u16)0; array_ctr < TOTAL_EMPLOYEES; array_ctr++)
     {
-        if(strcmp(RECORDS[existence_ctr].name , theName) != 0)
+        if(strcmp(RECORDS[existence_ctr].name , the_name) != 0)
             {
             existence_ctr++;
             }
@@ -230,15 +230,15 @@ void modifyEmployee(s16 index)
 void updateTxtFile(void)
 {
     u16 array_ctr=(u16)0;
-    ptr_write =fopen(TEXT_FILE_NAME, WRITE);
+    PTR_WRITE =fopen(TEXT_FILE_NAME, WRITE);
         for (array_ctr = (u16)0; array_ctr < TOTAL_EMPLOYEES; array_ctr++)
         {
-            fprintf(ptr_write,"Employee Name: %s\n", RECORDS[array_ctr].name);
-            fprintf(ptr_write,"Employee Email: %s\n", RECORDS[array_ctr].email);
-            fprintf(ptr_write,"Employee Phone Number: %s\n", RECORDS[array_ctr].phone);
+            fprintf(PTR_WRITE,"Employee Name: %s\n", RECORDS[array_ctr].name);
+            fprintf(PTR_WRITE,"Employee Email: %s\n", RECORDS[array_ctr].email);
+            fprintf(PTR_WRITE,"Employee Phone Number: %s\n", RECORDS[array_ctr].phone);
 
         }
-        fclose(ptr_write);
+        fclose(PTR_WRITE);
 }
 
 /******************************************************************************

@@ -18,8 +18,8 @@
 
 //Global Variables
 volatile u16 TOTAL_LINES;
-FILE *ptr_write;
-FILE *ptr_read;
+FILE *PTR_WRITE;
+FILE *PTR_READ;
 
 
 //The capacity of the database is 50 employees

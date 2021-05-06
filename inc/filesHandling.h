@@ -58,8 +58,8 @@ typedef struct
  *                           Extern Variables                             *
  *******************************************************************************/
 extern volatile u16 TOTAL_LINES;
-extern FILE *ptr_write;
-extern FILE *ptr_read;
+extern FILE *PTR_WRITE;
+extern FILE *PTR_READ;
 extern employee RECORDS[MAX_NUM_OF_EMPLOYEES];
 
 
@@ -75,6 +75,7 @@ void updateTxtFile(void);
 void insertEmployee(void);
 void doesExist(s16);
 void readTxtFile(void);
+u16 main(void);
 
 
 #endif
